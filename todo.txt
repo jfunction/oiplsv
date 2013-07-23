@@ -1,0 +1,5 @@
+1 make authentication pages (login/logout/register), session support.
+2 upload pdf page, with some fancy backend stuff to convert pdf to image format.
+3 view pdf page, with ability to comment.
+
+The above pages (excepting login/register) should all force authenticated sessions.
