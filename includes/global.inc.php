@@ -14,10 +14,8 @@ $userTools = new UserTools();
 session_start();
 
 //refresh session variables if logged in
-if(isset($_SESSION['logged_in'])) {
-	$user = unserialize($_SESSION['user']); //object
-	//~ echo $userTools->get($user["user_id"]);
-	$x=$userTools->get($user->user_id);
-	$_SESSION['user'] = serialize($x);
+if(isset($_SESSION['logged_in']) && $_SESSION['logged_in']==1) {
+	$user = unserialize($_SESSION['user']);
+	$_SESSION['user'] = serialize($userTools->get($user->user_id));
 }
 ?>

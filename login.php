@@ -1,8 +1,9 @@
 <?php 
 require_once 'includes/global.inc.php';  
-
-$html="";
-$error="";
+$head = "<title>Login</title>";
+$head .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/style.css\">";
+$html = "";
+$error = "";
 
 if(isset($_POST['is_submitted'])) {
 	//now get the data out of the form
@@ -10,12 +11,12 @@ if(isset($_POST['is_submitted'])) {
 	$password = $_POST['password'];
 	//now test these against the database
 	$userTools = new UserTools();
-	if($userTools->login($username,$password)){
+	$user = $userTools->login($username,$password);
+	if($user){ //true if login succeeded.
 		$error.="<p>Success, you are now logged in.</p>\n";
 		$error.="<p>If this page does not redirect you, click <a href=\"\">here</a>.</p>";
-		echo $error;
-		header("Location: index.php");
-	}else{
+		header("Location: index.php");//redirect
+	}else{ //will catch this in jQuery later, but need serverside checking either way
 		$error = "<p>Error - that username/password combination is invalid.</p>\n";
 	}
 }
@@ -24,7 +25,7 @@ if(isset($_POST['is_submitted'])) {
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Login</title>  
+		<?php echo $head; ?>
 	</head>
 	<body>		<?php if ("" != $error){echo $error;} ?>
 		<h3>Login:</h3>

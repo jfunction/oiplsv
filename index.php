@@ -1,26 +1,21 @@
 <?php
-	require_once 'includes/global.inc.php';
+	require_once 'includes/global.inc.php'; 
+	$head="<link rel=\"stylesheet\" type=\"text/css\" href=\"css/style.css\">";
+	
 	$html="";
-	if (isset($_SESSION['user'])){
-		$user = unserialize($_SESSION['user']);
-		$html .="<a href=\"/CS3003S/OIPLSV/logout.php\">Logout</a>.";
-		$html .="<p>You are logged in as ".$user->username."</p>";
+	if (isset($_SESSION['user']) && isset($_SESSION['logged_in'])){
+		$user = unserialize($_SESSION["user"]);
+		
 		$html .="<p>Here's the list of all lectures:</p>";
 		$html .="<ul>";//todo: get these from a db or from disk... db is better
 		$db = new DB();
-		$pages = $db->select("pdf","");
-		//~ echo "<pre>";
-		//~ print_r($pages);
-		//~ echo "</pre>";
-		foreach($pages as $key => $val){
-			//~ echo "<pre>";
-			//~ echo "$key -> $val";
-			//~ echo "</pre>";
-			if ($key == 'title'){
-					$html .="<li><a href=\"slides.php?pdf=".$val."\">".$val."</a></li>";
-			}
+		$pdfs = $db->select("pdf","");//everything from pdf table
+		//list them out
+		foreach($pdfs as $i => $pdf){
+			$html .="<li><a href=\"slides.php?pdf=".$pdf["title"]."\">".$pdf["title"]."</a></li>";
 		}
 		$html .="</ul><br>\n";
+		//only certain users can upload
 		if ("admin"==$user->role || "lecturer"==$user->role){
 			$html .="<a href=\"upload.php\">Upload PDF</a>";
 		}
@@ -33,8 +28,10 @@
 ?>
 <!DOCTYPE html>
 <html>
-<head></head>
+<head><?php echo $head; ?></head>
 <body>
-	<?php echo $html ?>
+	<?php 
+	include 'includes/header.inc.php';
+	echo $html ?>
 </body>
 </html>

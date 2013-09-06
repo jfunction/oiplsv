@@ -1,12 +1,14 @@
-ul { list-style-type: none }
+body { background-color: cadetblue; text-align: center; }
+
+ul { list-style-type: none; }
 
 div.splitbox { background: #EEE; height: 100%; width: 100%; }
 
-div.imageViewer { background: #DDD; float: left; height: 100%; width: auto; }
-#viewer { min-width: 100px; min-height: 100px; max-height: 100%; max-width: 100%; }
+div.imageViewer { background: #DDD; float: left; height: 100%; width: 50%; }
+#viewer { min-width: 100px; min-height: 100px; max-width: 100%; }
 
-div.commentViewer { background: #DDD; height: 100%; }
+div.commentViewer { background: #DDD; height: 100%; width: 50%; float: right; }
 .comment { border-bottom: 1px black solid; padding-top: 4px; padding-bottom: 4px;}
 
 div.clear { clear: both; height: 1px; overflow: hidden; font-size:0pt; margin-top: -1px; }
-textarea { width: 50% };
+textarea { width: 50%; };

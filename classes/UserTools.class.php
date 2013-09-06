@@ -5,12 +5,15 @@ require_once 'User.class.php';
 require_once 'DB.class.php';
 
 class UserTools {
-	
+
 	//auth returns the user if succesfull, false otherwise.
 	public function auth($username,$password) {
-		$sql = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
-		$result = mysql_query($sql);
-		return mysql_num_rows($result) == 1 ? mysql_fetch_assoc($result) : false;//true if theres a user with this username/password
+		$db = new DB();
+		echo 'authorizing...';
+		echo $username;
+		echo $password;
+		$result = $db->select('users', "username = '$username' AND password = '$password'");
+		return $result[0];
 	}
 
 	//Log the user in. First checks to see if the 
@@ -52,7 +55,7 @@ class UserTools {
 		$db = new DB();
 		$result = $db->select('users', "user_id = '$user_id'");
 		
-		return new User($result);
+		return new User($result[0]);
 	}
 	
 }

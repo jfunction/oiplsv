@@ -32,10 +32,10 @@ class User {
 		if(!$isNewUser) {
 			//set the data array
 			$data = array(
-				"username" => "'$this->username'",
-				"password" => "'$this->password'",
-				"email" => "'$this->email'",
-				"role" => "'$this->role'"
+				"username" => "$this->username",
+				"password" => "$this->password",
+				"email" => "$this->email",
+				"role" => "$this->role"
 			);
 			
 			//update the row in the database

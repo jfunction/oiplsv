@@ -8,8 +8,7 @@ class DB {
 	protected $db_pass = 'qwe';
 	protected $db_host = 'localhost';
 
-	//open a connection to the database. Make sure this is called
-	//on every page that needs to use the database.
+	//opens a connection to the database. Call before using db methods.
 	public function connect() {
 		$connection = mysql_connect($this->db_host, $this->db_user, $this->db_pass) or die(mysql_error());;
 		mysql_select_db($this->db_name) or die(mysql_error());;
@@ -38,18 +37,9 @@ class DB {
 	//returns a full row or rows from $table using $where as the where clause.
 	//return value is an associative array with column names as keys.
 	public function select($table, $where) {
-		//~ echo "---selecting---<br>\n";
 		$sql = "SELECT * FROM $table ";
 		if (!$where==""){$sql .= "WHERE $where";}
-		//~ echo $sql;
 		$result = mysql_query($sql);
-		//~ echo "<pre>";
-		//~ print_r($result);
-		//~ echo "</pre>";
-		//~ echo "result \"$result\"";
-		if(mysql_num_rows($result) == 1)
-			return $this->processRowSet($result, true);
-
 		return $this->processRowSet($result);
 	}
 
@@ -65,7 +55,7 @@ class DB {
 		return true;
 	}
 
-	//Inserts a new row into the database.
+	//Insert row into the database.
 	//takes an array of data, where the keys in the array are the column names
 	//and the values are the data that will be inserted into those columns.
 	//$table is the name of the table.
@@ -78,14 +68,15 @@ class DB {
 			$columns .= ($columns == "") ? "" : ", ";
 			$columns .= $column;
 			$values .= ($values == "") ? "" : ", ";
-			$values .= $value;
+			//below we neglect quotes on numbers and the keyword CURRENT_TIMESTAMP
+			$values .= !($value=="CURRENT_TIMESTAMP" || is_numeric($value)) ? '"'.$value.'"' : $value;
 		}
 
 		$sql = "insert into $table ($columns) values ($values)";
 
 		mysql_query($sql) or die(mysql_error());
 
-		//return the ID of the user in the database.
+		//return the ID of the new element in the database.
 		return mysql_insert_id();
 
 	}

@@ -1,6 +1,8 @@
 <?php 
 require_once 'includes/global.inc.php';  
 
+$head = "<title>Register</title>";
+$head .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/style.css\">";
 $html="";
 //if POST request from register page
 if (array_key_exists('is_submitted', $_POST)) {
@@ -11,7 +13,7 @@ if (array_key_exists('is_submitted', $_POST)) {
 		//return user exists page, with optional back button
 		$html.="<h3>Error:</h3><br>\n";
 		$html.="We're sorry, but '$username' is already taken.<br>\n";
-		$html.="Please hit back or click <a href=\"/CS3003S/OIPLSV/register\">here</a> to try again.";
+		$html.="Please hit back or click <a href=\"/CS3003S/OIPLSV/register.php\">here</a> to try again.";
 	}else{
 		//create user
 		$user = new User($_POST);//The constructor only grabs the user-relevant data from POST
@@ -20,7 +22,7 @@ if (array_key_exists('is_submitted', $_POST)) {
 		$userTools->login($username, $password);
 		//send to index page.
 		$html = "Success!!! You will be redirected shortly.";
-		header("Location: /CS3003S/OIPLSV/index.php");//send a redirect
+		header("Location: /CS3003S/OIPLSV/index.php?registered=True");//send a redirect
 	}
 }else{
 	$html.="<h3>Registration:</h3><br>\n";
@@ -35,7 +37,7 @@ if (array_key_exists('is_submitted', $_POST)) {
 
 <!DOCTYPE html>
 <html>
-<head></head>
+<head><?php echo $head; ?></head>
 <body>
 <?php echo $html ?>
 </body>
