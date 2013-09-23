@@ -1,13 +1,28 @@
 body { background-color: cadetblue; text-align: center; }
 
+header.topnav { background: black; color: white; padding-top:1em; padding-bottom:1em; font-size: 14px;}
+header.topnav a { color: white;}
+header.topnav a.nav_top_left { float:left; margin-left: 1em;}
+header.topnav span.nav_top_right { float:right; margin-right: 1em;}
+header.topnav span.nav_top_right span.smalltext { margin-right: 3em; font-size: 12px;}
+
 ul { list-style-type: none; }
+
+.comment_name, .response_name { text-decoration: underline; }
+
+ul.comments { font-size: 10pt ;}
+
+ul.responses {
+    font-size: 8pt;
+    width: 80%;
+}
 
 div.splitbox { background: #EEE; height: 100%; width: 100%; }
 
-div.imageViewer { background: #DDD; float: left; height: 100%; width: 50%; }
+div.imageViewer { background: #DDD; float: left; height: 100%; width: 70%; }
 #viewer { min-width: 100px; min-height: 100px; max-width: 100%; }
 
-div.commentViewer { background: #DDD; height: 100%; width: 50%; float: right; }
+div.commentViewer { background: #DDD; min-height:300px; height: 100%; width: 30%; float: right; }
 .comment { border-bottom: 1px black solid; padding-top: 4px; padding-bottom: 4px;}
 
 div.clear { clear: both; height: 1px; overflow: hidden; font-size:0pt; margin-top: -1px; }

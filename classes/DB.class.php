@@ -1,6 +1,6 @@
 <?php
 //DB.class.php
-
+require_once('FirePHPCore/fb.php');
 class DB {
 
 	protected $db_name = 'oiplsv';
@@ -73,7 +73,7 @@ class DB {
 		}
 
 		$sql = "insert into $table ($columns) values ($values)";
-
+		fb($sql);
 		mysql_query($sql) or die(mysql_error());
 
 		//return the ID of the new element in the database.

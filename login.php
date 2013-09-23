@@ -1,10 +1,10 @@
 <?php 
 require_once 'includes/global.inc.php';  
+require_once('FirePHPCore/fb.php');
 $head = "<title>Login</title>";
 $head .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/style.css\">";
 $html = "";
 $error = "";
-
 if(isset($_POST['is_submitted'])) {
 	//now get the data out of the form
 	$username = $_POST['username'];
@@ -14,7 +14,7 @@ if(isset($_POST['is_submitted'])) {
 	$user = $userTools->login($username,$password);
 	if($user){ //true if login succeeded.
 		$error.="<p>Success, you are now logged in.</p>\n";
-		$error.="<p>If this page does not redirect you, click <a href=\"\">here</a>.</p>";
+		$error.="<p>If this page does not redirect you, click <a href=\"index.php\">here</a>.</p>";
 		header("Location: index.php");//redirect
 	}else{ //will catch this in jQuery later, but need serverside checking either way
 		$error = "<p>Error - that username/password combination is invalid.</p>\n";
@@ -25,6 +25,7 @@ if(isset($_POST['is_submitted'])) {
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta charset="UTF-8">
 		<?php echo $head; ?>
 	</head>
 	<body>		<?php if ("" != $error){echo $error;} ?>

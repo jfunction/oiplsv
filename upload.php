@@ -6,9 +6,8 @@
 	$html="";
 	if (isset($_FILES['userfile']) && isset($_SESSION['user'])){//uploaded file and "logged in"?
 		$user = unserialize($_SESSION['user']);
-		$html .="<a href=\"/CS3003S/OIPLSV/logout.php\">Logout</a>.";
 
-		$target_path = "/var/www/CS3003S/OIPLSV/pdf/";
+		$target_path = "/var/www/CS3003S/OIPLSV/pdf/"; //<-- where to save the PDF?
 		$name = basename( $_FILES['userfile']['name']);
 		$target_path = $target_path . $name;
 		if(move_uploaded_file($_FILES['userfile']['tmp_name'], $target_path)) {
@@ -25,18 +24,34 @@
 			 * 
 			 * The ghostscript program and info on these params can be found here at http://www.ghostscript.com/
 			 * */
-			$cmd="gs -dNOPAUSE -r200x200 -sDEVICE=jpeg -sOutputFile=\"/var/www/CS3003S/OIPLSV/img/".str_replace(".pdf","",$name)."_%d.jpg\" -dJPEGQ=100 -q \"".$target_path."\" -c quit";
+			$img_folder='/var/www/CS3003S/OIPLSV/img/';
+			$cmd="gs -dNOPAUSE -r200x200 -sDEVICE=jpeg -sOutputFile=\"".$img_folder.str_replace(".pdf","",$name)."_%d.jpg\" -dJPEGQ=100 -q \"$target_path\" -c quit";
+
 			$output = shell_exec($cmd);
-			$html .= "<p>The file " . $name . " has been uploaded! Click <a href=\"slides.php?pdf=".str_replace(".pdf","",$name)."\">here</a> to view it.</p>";//header()
-			$data=array('title' => str_replace(".pdf","",$name), 'uploader_id' => $user->user_id, 'upload_date' => 'CURRENT_TIMESTAMP');
-			$page_id = $db->insert($data,'pdf');
+			$data=array(
+				'user_id' => $user->user_id,
+				'title' => str_replace(".pdf","",$name), 
+				'date_uploaded' => 'CURRENT_TIMESTAMP'
+			);
+			$pdfdoc_id = $db->insert($data,'PDFDocument');
+			$html .= "<p>The file " . $name . " has been uploaded! Click <a href=\"slides.php?pdfdocument_id=".$pdfdoc_id."&pdfslide=1\">here</a> to view it.</p>";//header()
+			//Now add all the slides we have just accumulated:
+			$i=1;
+			while(file_exists($img_folder.str_replace(".pdf","",$name)."_".$i.".jpg")){
+				//add a slide
+				$data=array(
+					'pdfdocument_id' => $pdfdoc_id,
+					'pdfslide_order' => $i
+				);
+				$pdfslide_id = $db->insert($data,'PDFSlide');
+				$i++;
+			}
 		} else{
 			$html .= "There was an error uploading the file, please try again!";
 		}
 
 	}elseif (isset($_SESSION['user'])){
 		$user = unserialize($_SESSION['user']);
-		$html .="<a href=\"/CS3003S/OIPLSV/logout.php\">Logout</a>.";
 		if ("admin"==$user->role || "lecturer"==$user->role){ #only allow these people to upload pdfs
 			$html.="<h1>Upload a PDF</h1><br>\n";
 			$html.="<form enctype=\"multipart/form-data\" action=\"\" method=\"POST\"><br>\n";
@@ -49,16 +64,21 @@
 		}
 	}else{
 		$html.="<p>You are not logged in, so are unable to view this page.</p>";
-		$html.="<a href=\"/CS3003S/OIPLSV/login.php\">Login</a>";
-		$html.=" or <a href=\"/CS3003S/OIPLSV/register.php\">Register</a><br>\n";
+		$html.="<a href=\"login.php\">Login</a>";
+		$html.=" or <a href=\"register.php\">Register</a><br>\n";
 		$html.="<img src=\"img/home.png\">\n";
 	}
 
 ?>
 <!DOCTYPE html>
 <html>
-<head><?php echo $head; ?></head>
-<body>
-	<?php echo $html; ?>
-</body>
+	<head>
+		<meta charset="UTF-8">
+		<?php echo $head; ?>
+	</head>
+	<body>
+		<?php 
+		include 'includes/header.inc.php';
+		echo $html; ?>
+	</body>
 </html>
